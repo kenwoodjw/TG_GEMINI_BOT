@@ -15,6 +15,29 @@ import (
 	"google.golang.org/api/option"
 )
 
+var (
+	replacer = strings.NewReplacer(
+		"_", "\\_",
+		"*", "\\*",
+		"[", "\\[",
+		"]", "\\]",
+		"(", "\\(",
+		")", "\\)",
+		"~", "\\~",
+		"`", "\\`",
+		">", "\\>",
+		"#", "\\#",
+		"+", "\\+",
+		"-", "\\-",
+		"=", "\\=",
+		"|", "\\|",
+		"{", "\\{",
+		"}", "\\}",
+		".", "\\.",
+		"!", "\\!",
+	)
+)
+
 func main() {
 	tgToken := flag.String("TELEGRAM_BOT_TOKEN", "", "Telegram Bot Token")
 	apiKey := flag.String("GOOGLE_GEMINI_KEY", "", "API Key for genai")
@@ -138,6 +161,7 @@ func handlePhoto(bot *tgbotapi.BotAPI, update tgbotapi.Update, client *genai.Cli
 				log.Println("Error downloading image:", err)
 				return
 			}
+
 			// 获取用户的文本输入
 			userText := ""
 			if update.Message.Caption != "" {
@@ -159,6 +183,7 @@ func processAndReplyImage(bot *tgbotapi.BotAPI, update tgbotapi.Update, client *
 	prompt := []genai.Part{
 		genai.ImageData("jpeg", imgData),
 	}
+
 	// 如果用户提供了文本描述，则添加到 prompt 中
 	if userText != "" {
 		prompt = append(prompt, genai.Text(userText))
@@ -189,6 +214,7 @@ func replyWithResponse(bot *tgbotapi.BotAPI, update tgbotapi.Update, resp *genai
 		}
 	}
 }
+
 func downloadImage(bot *tgbotapi.BotAPI, filePath string) ([]byte, error) {
 	resp, err := bot.GetFileDirectURL(filePath)
 	if err != nil {
@@ -220,6 +246,7 @@ func printResponse(resp *genai.GenerateContentResponse) string {
 		}
 	}
 
+	ret = replacer.Replace(ret)
 	fmt.Println("---")
 	return ret + "\n---"
 }
