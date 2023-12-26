@@ -31,6 +31,12 @@ Before you begin, ensure you have the following software installed:
 
     ```
 
+### Deploy
+
+You can click on the button below to deploy the bot to Zeabur.
+
+[![Deploy on Zeabur](https://zeabur.com/button.svg)](https://zeabur.com/templates/Z8668N)
+
 ### Reference
 
 https://github.com/yihong0618/tg_bot_collections
